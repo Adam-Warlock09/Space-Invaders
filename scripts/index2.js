@@ -9,6 +9,9 @@ let boffset=10;		//offset for bullet generation
 let lastShotTime=Date.now();
 let shotCoolDown=500;
 
+let columns=8;
+let rows=5;
+
 //player object
 let player={
   
@@ -60,21 +63,21 @@ document.addEventListener("keyup",(event)=>{
 function initialiseAliens(){
     let curX = 50;  // Dimensions are 60x30
     let curY = 50;
-    for(let i = 1; i <= 5; i++){
+    for(let i = 1; i <= rows; i++){
         let row = [];
-        for(let j = 1; j <= 5; j++){
+        for(let j = 1; j <= columns; j++){
             row.push({  // Adding an alien to a row
                 posx: curX,
                 posy: curY,
-                vel: 1,
+                vel: 0.01,
                 dir: 1,
 			  	height: 30,
-			  	width: 60
+			  	width: 70
             });
-            curX += 70;
+            curX += 90;
         }
         aliens.push(row);  // Adding a row to the alien matrix
-        curY += 40;
+        curY += 50;
         curX = 50;
     }
 }
@@ -122,6 +125,20 @@ function update(){
         bullet.y -= bullet.vel;
     });
 
+  	aliens.forEach(function(row){
+	  if (((row[0].posx - (row[0].width / 2)) > 0 && row[0].dir==-1) || (row[columns - 1].dir==1 && (row[columns - 1].posx + (row[columns - 1].width / 2)) < (canvas.width - xoffset))){
+			row.forEach((alien)=>{
+				alien.posx+=alien.vel*alien.dir;
+		});
+	  }
+	  else{
+	  	row.forEach((alien)=>{
+			alien.dir*=-1;
+		  	alien.posy+=50
+		});
+	  }
+	});
+  
     // Remove bullets that have gone off-screen
     bullets = bullets.filter(function(bullet) {
         return bullet.y > 0;
