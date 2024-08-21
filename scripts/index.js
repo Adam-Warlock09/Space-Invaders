@@ -144,3 +144,5 @@ setInterval(() => {
 }, 300);
 
 requestAnimationFrame(moveShip);
+
+spawnAlien()
