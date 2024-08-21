@@ -41,7 +41,7 @@ body {
 
 .space-ship {
   position: absolute;
-  transition: left 0.05s linear;
+  transition: left 0.06s linear;
 }
 
 .bullet {

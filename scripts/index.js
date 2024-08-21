@@ -10,7 +10,7 @@ var position = ship.getBoundingClientRect().left - game.getBoundingClientRect().
 let movingLeft = false;
 let movingRight = false;
 
-let moveSpeed = 7;
+let moveSpeed = 5;
 
 let level = 1;
 
