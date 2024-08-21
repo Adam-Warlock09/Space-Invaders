@@ -1,0 +1,87 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #000;
+  display: flex;
+  justify-content: center;
+  overflow-x: hidden;
+}
+
+.stars,
+.twinkling {
+  position: absolute;
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.stars {
+  background: url("../assets/bg/stars.png") repeat;
+  animation: moving-stars 8000s linear infinite;
+}
+
+.twinkling {
+  background: transparent url("../assets/bg/twinkling.png") repeat;
+  z-index: 2;
+  animation: moving-twinkle 300s linear infinite;
+}
+
+.game {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 96%;
+  width: 92%;
+  position: absolute;
+  z-index: 3;
+}
+
+.space-ship {
+  position: absolute;
+  transition: left 0.05s linear;
+}
+
+.bullet {
+  background-color: yellow;
+  height: 1.25rem;
+  width: 0.15rem;
+  position: absolute;
+  transition: left top 0.1s linear;
+}
+
+.enemy {
+  background-color: aqua;
+  display: inline-block;
+  width: 50%;
+  /*height: 40%; */
+  position: absolute;
+  z-index: 4;
+  top: 5%;
+}
+
+.alien-container {
+  display: inline-block;
+}
+
+@keyframes moving-stars {
+  from {
+    background-position: 0px 0px;
+  }
+
+  to {
+    background-position: 0px 1000000px;
+  }
+}
+
+@keyframes moving-twinkle {
+  from {
+    background-position: 0px 0px;
+  }
+
+  to {
+    background-position: 10000px 0px;
+  }
+}
