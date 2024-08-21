@@ -57,7 +57,7 @@ document.addEventListener("keyup",(event)=>{
   }
 });
 
-function initaliseAliens(){
+function initialiseAliens(){
     let curX = 50;  // Dimensions are 60x30
     let curY = 50;
     for(let i = 1; i <= 5; i++){
@@ -68,8 +68,8 @@ function initaliseAliens(){
                 posy: curY,
                 vel: 1,
                 dir: 1,
-			  	height: 60,
-			  	width: 30
+			  	height: 30,
+			  	width: 60
             });
             curX += 70;
         }
@@ -145,4 +145,5 @@ function gameLoop(){
 }
 
 //calling the game loop
+initialise();
 gameLoop();
