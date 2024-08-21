@@ -92,11 +92,11 @@ const shootBullet = (direction) => {
 }
 
 const spawnAlien = () => {
-    let a_rows = 2 + Math.ceil((level - 1) / 3)
-    let b_rows = 2 + Math.ceil((level - 2) / 3)
-    let c_rows = 2 + Math.ceil((level - 3) / 3)
+    let a_rows = 1 + Math.ceil((level - 1) / 3)
+    let b_rows = 1 + Math.ceil((level - 2) / 3)
+    let c_rows = 1 + Math.ceil((level - 3) / 3)
     for (i = 0; i < (a_rows + b_rows + c_rows); i++) {
-        for (j = 0; j < 6; j++) {
+        for (j = 0; j < 12; j++) {
             var alien = document.createElement('div')
             alien.classList.add('alien-container')
             enemy.appendChild(alien)
