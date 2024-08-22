@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=New+Amsterdam&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -8,7 +10,7 @@ body {
   background-color: #000;
   display: flex;
   justify-content: center;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .stars,
@@ -30,6 +32,47 @@ body {
   animation: moving-twinkle 300s linear infinite;
 }
 
+.scoreboard {
+  position: absolute;
+  width: 100%;
+  height: 7%;
+  z-index: 6;
+  font-family: "New Amsterdam", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0.05rem;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  color: #fff;
+}
+
+.textbox,
+.healthbar {
+  display: flex;
+  align-items: center;
+}
+
+.textbox {
+  width: 20%;
+  height: 90%;
+  justify-content: space-evenly;
+}
+
+.healthbar {
+  width: 30%;
+  height: 90%;
+}
+
+.hpbar {
+  width: 70%;
+  height: 50%;
+  margin-left: 1rem;
+  border: 3px ridge #fff;
+}
+
 .game {
   display: flex;
   justify-content: center;
@@ -42,23 +85,23 @@ body {
 
 .space-ship {
   position: absolute;
-  transition: left 0.05s linear;
+  /* transition: left 0.05s linear; */
 }
 
 .bullet {
   background-color: yellow;
-  height: 1.25rem;
-  width: 0.15rem;
+  height: 1.5rem;
+  width: 0.25rem;
   position: absolute;
-  transition: left top 0.05s linear;
+  /* transition: left top 0.05s linear; */
 }
 
 .bullet-enemy {
   background-color: red;
-  height: 1.1rem;
-  width: 0.1rem;
+  height: 1.5rem;
+  width: 0.2rem;
   position: absolute;
-  transition: left top 0.05s linear;
+  /* transition: top 0.05s linear;  */
 }
 
 .enemy {
@@ -67,7 +110,8 @@ body {
   /*height: 40%; */
   position: absolute;
   z-index: 4;
-  top: 5%;
+  top: 7%;
+  /* transition: left top 0.5s linear; */
 }
 
 .alien-container {
