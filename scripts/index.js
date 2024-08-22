@@ -5,6 +5,10 @@ const enemy = document.getElementById("enemy");
 const gameWidth = game.clientWidth;
 const shipWidth = ship.clientWidth;
 
+var shooting = false
+var shootInterval = null
+var canShoot = true
+
 var position = ship.getBoundingClientRect().left - game.getBoundingClientRect().left;
 
 let movingLeft = false;
@@ -12,7 +16,7 @@ let movingRight = false;
 
 let moveSpeed = 5;
 
-let level = 1;
+let level = 2;
 
 function moveShip() {
 
@@ -40,6 +44,71 @@ document.addEventListener('keydown', (event) => {
         case "ArrowRight":
             movingRight = true;
             break;
+        case " ":
+            if (!shooting) {
+
+                shooting = true
+                if (!shootInterval) {
+
+                    var d = 0
+
+                    if (ship.getBoundingClientRect().left == game.getBoundingClientRect().left || Math.round(ship.getBoundingClientRect().right) == Math.round(game.getBoundingClientRect().right)) {
+                        d = 0
+                    } else {
+
+                        if (movingLeft) {
+                            if (movingRight) {
+                                d = 0
+                            } else {
+                                d = -1
+                            }
+                        } else {
+                            if (movingRight) {
+                                d = 1
+                            } else {
+                                d = 0
+                            }
+                        }
+
+                    }
+
+                    shootBullet(d)
+
+                    shootInterval = setInterval(() => {
+                        if (!shooting) {
+                            clearInterval(shootInterval)
+                            shootInterval = null
+                            return
+                        }
+
+                        var d = 0
+
+                        if (ship.getBoundingClientRect().left == game.getBoundingClientRect().left || Math.round(ship.getBoundingClientRect().right) == Math.round(game.getBoundingClientRect().right)) {
+                            d = 0
+                        } else {
+
+                            if (movingLeft) {
+                                if (movingRight) {
+                                    d = 0
+                                } else {
+                                    d = -1
+                                }
+                            } else {
+                                if (movingRight) {
+                                    d = 1
+                                } else {
+                                    d = 0
+                                }
+                            }
+
+                        }
+
+                        shootBullet(d)
+
+                    }, 500)
+                }
+
+            }
     }
 });
 
@@ -51,12 +120,21 @@ document.addEventListener('keyup', (event) => {
         case "ArrowRight":
             movingRight = false;
             break;
+        case " ":
+            shooting = false;
+            clearInterval(shootInterval)
+            shootInterval = null
+            break;
     }
 });
 
 const shootBullet = (direction) => {
 
-    const bullet = document.createElement('div')
+    if (!canShoot) return;
+
+    canShoot = false
+
+    var bullet = document.createElement('div')
     bullet.classList.add('bullet')
     game.appendChild(bullet)
 
@@ -66,7 +144,7 @@ const shootBullet = (direction) => {
     bullet.style.left = `${bulletPositionX}px`
     bullet.style.top = `${bulletPositionY}px`
 
-    const moveBullet = setInterval(() => {
+    const moveBullet = () => {
 
         let bulletSpeedY = 5;
         bulletPositionY -= bulletSpeedY
@@ -78,16 +156,37 @@ const shootBullet = (direction) => {
         bulletPositionX += (bulletSpeedX * direction)
         bullet.style.left = `${bulletPositionX}px`
 
+        var aliens = document.querySelectorAll("#enemy .alien-container");
+
+        aliens.forEach((alien) => {
+
+            let alienRect = alien.getBoundingClientRect();
+            let bulletRect = bullet.getBoundingClientRect();
+
+            if (alien.children[0].style.visibility != 'hidden' && (bulletRect.left < alienRect.right && bulletRect.right > alienRect.left && bulletRect.top < alienRect.bottom && bulletRect.bottom > alienRect.top)) {
+                alien.children[0].style.visibility = 'hidden'
+                bullet.remove()
+                return;
+            }
+
+        });
+
         if (bulletPositionX < 0 || bulletPositionX > document.body.clientWidth) {
             bullet.remove()
-            clearInterval(moveBullet)
         }
-        if (bulletPositionY < 0) {
+        else if (bulletPositionY < 0) {
             bullet.remove()
-            clearInterval(moveBullet)
+        } else {
+            requestAnimationFrame(moveBullet)
         }
 
-    }, 10);
+    }
+
+    requestAnimationFrame(moveBullet)
+
+    setTimeout(() => {
+        canShoot = true
+    }, 450);
 
 }
 
@@ -102,11 +201,11 @@ const spawnAlien = () => {
             enemy.appendChild(alien)
             var img = document.createElement('img')
             var n = 0
-            if (i+1 <= c_rows){
+            if (i + 1 <= c_rows) {
                 n = 3;
-            }else if(i+1 <= c_rows+b_rows){
+            } else if (i + 1 <= c_rows + b_rows) {
                 n = 2
-            }else{
+            } else {
                 n = 1
             }
             img.src = `../assets/sprites/alien-${n}.png`
@@ -116,33 +215,71 @@ const spawnAlien = () => {
     }
 };
 
-setInterval(() => {
-
-    var d = 0
-
-    if (ship.getBoundingClientRect().left == game.getBoundingClientRect().left || Math.round(ship.getBoundingClientRect().right) == Math.round(game.getBoundingClientRect().right)) {
-        d = 0
-    } else {
-
-        if (movingLeft) {
-            if (movingRight) {
-                d = 0
-            } else {
-                d = -1
-            }
-        } else {
-            if (movingRight) {
-                d = 1
-            } else {
-                d = 0
-            }
-        }
-
+const attackBullet = () => {
+    
+    var aliens = document.querySelectorAll("#enemy .alien-container");
+    var attackers = []
+    
+    for (z = 0; z < level; z++) {
+        attackers.push(Math.round(Math.random() * (11) + ((12 * z) + 1)))
+        attackers.push(Math.round(Math.random() * (11) + ((12 * z) + 1)))
+        attackers.push(Math.round(Math.random() * (11) + ((12 * z) + 1)))
     }
 
-    shootBullet(d)
-}, 300);
+    console.log(attackers)
+    
+    attackers.forEach((index) => {
+        
+        index *= -1
+        console.log(aliens[aliens.length + index])
+        var bullet = document.createElement('div')
+        bullet.classList.add('bullet-enemy')
+        let attack_elem = aliens[aliens.length + index]
+        attack_elem.appendChild(bullet)
+        
+        let bulletPositionX = aliens[aliens.length + index].getBoundingClientRect().left + aliens[aliens.length + index].clientWidth / 2 - enemy.getBoundingClientRect().left;
+        let bulletPositionY = aliens[aliens.length + index].getBoundingClientRect().bottom - enemy.getBoundingClientRect().top 
+    
+        bullet.style.left = `${bulletPositionX}px`
+        bullet.style.top = `${bulletPositionY}px`
+
+    })
+
+
+    // const moveAttackBullet = (bullet) => {
+
+    //     let bulletSpeedY = 5;
+    //     bulletPositionY += bulletSpeedY
+    //     bullet.style.top = `${bulletPositionY}px`
+
+
+    //     aliens.forEach((alien) => {
+
+    //         let alienRect = alien.getBoundingClientRect();
+    //         let bulletRect = bullet.getBoundingClientRect();
+
+    //         if (alien.children[0].style.visibility != 'hidden' && (bulletRect.left < alienRect.right && bulletRect.right > alienRect.left && bulletRect.top < alienRect.bottom && bulletRect.bottom > alienRect.top)) {
+    //             alien.children[0].style.visibility = 'hidden'
+    //             bullet.remove()
+    //             return;
+    //         }
+
+    //     });
+
+    //     if (bulletPositionY > document.body.clientHeight) {
+    //         bullet.remove()
+    //     } else {
+    //         requestAnimationFrame(moveAttackBullet)
+    //     }
+
+    // }
+
+    // requestAnimationFrame(moveAttackBullet)
+
+}
 
 requestAnimationFrame(moveShip);
 
-spawnAlien()
+spawnAlien();
+
+attackBullet()

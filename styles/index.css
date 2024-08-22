@@ -1,6 +1,7 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 body {
@@ -41,7 +42,7 @@ body {
 
 .space-ship {
   position: absolute;
-  transition: left 0.06s linear;
+  transition: left 0.05s linear;
 }
 
 .bullet {
@@ -49,7 +50,15 @@ body {
   height: 1.25rem;
   width: 0.15rem;
   position: absolute;
-  transition: left top 0.1s linear;
+  transition: left top 0.05s linear;
+}
+
+.bullet-enemy {
+  background-color: red;
+  height: 1.1rem;
+  width: 0.1rem;
+  position: absolute;
+  transition: left top 0.05s linear;
 }
 
 .enemy {
@@ -64,9 +73,11 @@ body {
 .alien-container {
   display: inline-block;
   margin: 0.5rem;
+  height: 60px;
+  aspect-ratio: 1;
 }
 
-.alien-img{
+.alien-img {
   height: 60px;
   aspect-ratio: 1;
 
