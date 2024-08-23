@@ -131,10 +131,9 @@ body {
 
 .enemy {
   display: inline-block;
-  width: 60%;
+  width: 912px;
   /*height: 40%; */
   position: absolute;
-  background-color: aqua;
   z-index: 4;
   top: 7%;
   transition: top 0.005s linear, left 0.015s linear;
