@@ -10,12 +10,14 @@ const currentHP = document.getElementById("currentHealth")
 const hpCount = document.getElementById("hpcount")
 const levelCount = document.getElementById("level")
 const levelDisplay = document.getElementById("levelDisplay")
+const highScoreDisplay = document.getElementById("highscore")
 
 var shooting = false
 var shootInterval = null
 var canShoot = true
 
 var score = 0
+var highscore = 0
 var prevScore = 0
 var currentHealth = 1000
 
@@ -34,10 +36,76 @@ var maxLevel = 5;
 
 const updateScore = () => {
     scoreCount.innerHTML = `Score : ${score}`;
+    if(score > highscore) {
+        highscore = score
+        updateHighscore()
+    }
     if (score - prevScore == (120 * ((1 * (1 + Math.ceil((level - 1) / 3))) + (2 * (1 + Math.ceil((level - 2) / 3))) + (3 * (1 + Math.ceil((level - 3) / 3)))))) {
         prevScore = score
         upLevel()
     }
+}
+
+const exitGame = () => {
+    levelDisplay.innerHTML = `Thank You For Playing!<br>Your HighScore : ${highscore}`
+    levelDisplay.style.fontSize = '8rem'
+    levelDisplay.style.opacity = "1"
+}
+
+const updateHighscore = () => {
+    highScoreDisplay.innerHTML = `High Score : ${highscore}`
+}
+
+const restartGame = () => {
+
+    level = 0
+    score = 0
+    currentHealth = 1000
+    levelDisplay.innerHTML = `Start New Game ?`
+    var btn1 = document.createElement("button")
+    var btn2 = document.createElement("button")
+    var buttonbox = document.createElement("div")
+    buttonbox.classList.add("buttonbox")
+    btn1.classList.add("choice-btn")
+    btn2.classList.add("choice-btn")
+    btn1.innerHTML = 'No'
+    btn2.innerHTML = 'Yes'
+    levelDisplay.appendChild(buttonbox)
+    buttonbox.appendChild(btn1)
+    buttonbox.appendChild(btn2)
+    levelDisplay.style.fontSize = '10rem'
+    levelDisplay.style.opacity = "1"
+
+    btn1.addEventListener('click', () => {
+
+        btn1.disabled = true
+        setTimeout(() => {
+
+            levelDisplay.style.opacity = "0"
+            setTimeout(() => {
+                levelDisplay.style.fontSize = '16rem'
+                levelDisplay.innerHTML = ''
+                exitGame()
+            }, 2000);
+
+        }, 2000);
+        
+    })
+
+    btn2.addEventListener('click', () => {
+        btn2.disabled = true
+        setTimeout(() => {
+
+            levelDisplay.style.opacity = "0"
+            setTimeout(() => {
+                levelDisplay.style.fontSize = '16rem'
+                levelDisplay.innerHTML = ''
+                upLevel()
+            }, 2000);
+
+        }, 2000);
+    })
+
 }
 
 const updateHealth = () => {
@@ -60,9 +128,11 @@ const updateHealth = () => {
         setTimeout(() => {
 
             levelDisplay.style.opacity = "0"
-            //CODE FOR START A NEW GAME
+            setTimeout(() => {
+                restartGame()
+            }, 2000);
 
-        }, 3000);
+        }, 2000);
     }
 
 }
@@ -95,10 +165,12 @@ const upLevel = () => {
         setTimeout(() => {
 
             levelDisplay.style.opacity = "0"
+            setTimeout(() => {
+                restartGame()
+            }, 2000)
 
-        }, 3000);
+        }, 2000);
 
-        //CODE FOR START A NEW GAME
         return
     }
     levelCount.innerHTML = `Level : ${level}`
@@ -124,9 +196,9 @@ const upLevel = () => {
 
             attackBullet();
 
-        }, 3000);
+        }, 2500);
         
-    }, 3000);
+    }, 2000);
 
 }
 

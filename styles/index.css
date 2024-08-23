@@ -57,7 +57,7 @@ body {
 }
 
 .textbox {
-  width: 25%;
+  width: 30%;
   height: 90%;
   justify-content: space-evenly;
 }
@@ -102,10 +102,47 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
   font-size: 16rem;
   font-weight: 400;
   font-style: normal;
-  transition: opacity 3s ease-in-out;
+  flex-direction: column;
+  transition: opacity 2s ease-in-out;
+}
+
+.levelDisplay>br {
+  display: block;
+  content: "";
+  margin-top: 3rem;
+}
+
+.buttonbox {
+  width: 100%;
+  height: 20%;
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.choice-btn {
+  height: 4rem;
+  width: 8rem;
+  background-color: transparent;
+  border: 4px solid #ffffffcd;
+  color: #fff;
+  font-family: "VT323", monospace;
+  font-size: 3rem;
+  font-weight: 400;
+  font-style: normal;
+  cursor: pointer;
+  transition: color 0.5s ease-in-out, background-color 0.5s ease-in-out;
+}
+
+.choice-btn:hover {
+  color: #000;
+  background-color: #fff;
 }
 
 .space-ship {
@@ -151,7 +188,7 @@ body {
   aspect-ratio: 1;
 }
 
-.endline{
+.endline {
   position: absolute;
   height: 0.2rem;
   width: 100vw;
