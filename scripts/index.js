@@ -25,7 +25,7 @@ var movingLeft = false;
 var movingRight = false;
 var enemyDirection = 3;
 
-var moveSpeed = 0.8;
+var moveSpeed = 2;
 var enemySpeed = 0.5;
 
 var level = 0;
@@ -312,7 +312,7 @@ const shootBullet = (direction) => {
 
     setTimeout(() => {
         canShoot = true
-    }, 450);
+    }, 250);
 
 };
 
