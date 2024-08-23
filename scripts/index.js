@@ -5,23 +5,67 @@ const enemy = document.getElementById("enemy");
 const gameWidth = game.clientWidth;
 const shipWidth = ship.clientWidth;
 
+const scoreCount = document.getElementById("score")
+const currentHP = document.getElementById("currentHealth")
+const hpCount = document.getElementById("hpcount")
+const levelCount = document.getElementById("level")
+const levelDisplay = document.getElementById("levelDisplay")
+
 var shooting = false
 var shootInterval = null
 var canShoot = true
 
 var score = 0
-var damage = 0
+var prevScore = 0
+var currentHealth = 1000
 
 var position = ship.getBoundingClientRect().left - game.getBoundingClientRect().left;
 
-let movingLeft = false;
-let movingRight = false;
+var movingLeft = false;
+var movingRight = false;
 var enemyDirection = 3;
 
-let moveSpeed = 5;
-let enemySpeed = 0.4;
+var moveSpeed = 0.8;
+var enemySpeed = 0.5;
 
-let level = 1;
+var level = 0;
+
+var maxLevel = 5;
+
+const updateScore = () => {
+    scoreCount.innerHTML = `Score : ${score}`;
+    if (score - prevScore == (120 * ((1 * (1 + Math.ceil((level - 1) / 3))) + (2 * (1 + Math.ceil((level - 2) / 3))) + (3 * (1 + Math.ceil((level - 3) / 3)))))) {
+        prevScore = score
+        upLevel()
+    }
+}
+
+const updateHealth = () => {
+
+    hpCount.innerHTML = `HP : ${currentHealth}/1000`
+
+    currentHP.style.width = `${currentHealth / 10}%`
+
+    currentHP.style.background = `linear-gradient(to left, rgb(${255 - (255 * currentHealth/1000)}, ${255 * currentHealth / 1000}, 0), rgb(${128 * (1 - (currentHealth / 1000))},${128 * (currentHealth / 1000)}, 0))`
+
+    if(currentHealth == 0){
+        enemy.innerHTML = ""
+        enemy.style.top = "7%"
+        enemy.style.left = "auto"
+
+        levelDisplay.innerHTML = `YOU LOST`
+
+        levelDisplay.style.opacity = "1"
+
+        setTimeout(() => {
+
+            levelDisplay.style.opacity = "0"
+            //CODE FOR START A NEW GAME
+
+        }, 3000);
+    }
+
+}
 
 function moveShip() {
 
@@ -38,6 +82,51 @@ function moveShip() {
     }
 
     requestAnimationFrame(moveShip);
+
+}
+
+const upLevel = () => {
+
+    level += 1
+    if (level == maxLevel) {
+        levelDisplay.innerHTML = `YOU WON`
+        levelDisplay.style.opacity = "1"
+
+        setTimeout(() => {
+
+            levelDisplay.style.opacity = "0"
+
+        }, 3000);
+
+        //CODE FOR START A NEW GAME
+        return
+    }
+    levelCount.innerHTML = `Level : ${level}`
+    enemy.innerHTML = ""
+    enemy.style.top = "7%"
+    enemy.style.left = "auto"
+    levelDisplay.innerHTML = `LEVEL ${level}`
+    levelDisplay.style.opacity = "1"
+
+    updateHealth();
+
+    updateScore();
+
+    setTimeout(() => {
+        
+        levelDisplay.style.opacity = "0"
+
+        setTimeout(() => {
+            
+            spawnAlien();
+
+            requestAnimationFrame(moveEnemy);
+
+            attackBullet();
+
+        }, 3000);
+        
+    }, 3000);
 
 }
 
@@ -153,7 +242,7 @@ const shootBullet = (direction) => {
 
         if (!bullet) return
 
-        let bulletSpeedY = 5;
+        let bulletSpeedY = 2;
         bulletPositionY -= bulletSpeedY
         bullet.style.top = `${bulletPositionY}px`
 
@@ -165,18 +254,44 @@ const shootBullet = (direction) => {
 
         var aliens = document.querySelectorAll("#enemy .alien-container");
 
-        aliens.forEach((alien) => {
+        aliens.forEach((alien, index) => {
 
             let alienRect = alien.getBoundingClientRect();
             let bulletRect = bullet.getBoundingClientRect();
 
             if (alien.children[0].style.visibility != 'hidden' && (bulletRect.left < alienRect.right && bulletRect.right > alienRect.left && bulletRect.top < alienRect.bottom && bulletRect.bottom > alienRect.top)) {
                 alien.children[0].style.visibility = 'hidden'
-                if(alien.children[0].src == "http://127.0.0.1:5500/assets/sprites/alien-1.png"){
-                    
+                let enemy_level
+                if (alien.children[0].src.includes("alien-1")) {
+                    enemy_level = 1
+                } else if (alien.children[0].src.includes("alien-2")) {
+                    enemy_level = 2
+                } else {
+                    enemy_level = 3
                 }
-                score += 10
+                score += 10 * enemy_level
+                updateScore()
                 bullet.remove()
+
+                let f = true
+                let i = index - index % 12
+                let z = i
+
+                while(aliens[i]){
+                    if(aliens[i].children[0].style.visibility != 'hidden'){
+                        f = false
+                        break;
+                    }
+                    i += 1
+                }
+
+                if(f == true){
+                    while (aliens[z]) {
+                        aliens[z].remove()
+                        z += 1
+                    }
+                }
+
                 return;
             }
 
@@ -228,26 +343,30 @@ const spawnAlien = () => {
 
 function moveEnemy() {
 
+    if(enemy.innerHTML == "") return;
+
     var enemyLeftPos = enemy.offsetLeft;
     var enemyWidth = enemy.clientWidth;
 
     if (enemy.offsetTop + enemy.clientHeight >= game.clientHeight) return
 
+    var flag = 1
+
     if (enemyLeftPos + enemyWidth >= game.clientWidth || enemyLeftPos < 0) {
 
-        console.log
         enemyDirection *= -1
         enemy.style.top = `${enemy.offsetTop + 60}px`;
+        // console.log(enemyLeftPos + enemyWidth, game.clientWidth)
         if (enemyLeftPos + enemyWidth >= game.clientWidth) {
-            enemy.style.left = `${enemy.offsetLeft + (enemyLeftPos + enemyWidth - game.clientWidth) * enemyDirection}px`;
+            enemy.style.left = `${enemy.offsetLeft + (enemyLeftPos + enemyWidth - game.clientWidth + 5) * (-1)}px`;
+            flag = 0
         }
     }
 
-    enemy.style.left = `${enemy.offsetLeft + enemySpeed * enemyDirection}px`;
+    if(flag == 1){
+        enemy.style.left = `${enemy.offsetLeft + enemySpeed * enemyDirection}px`;
+    }
 
-    setTimeout(() => {
-
-    }, 50);
     requestAnimationFrame(moveEnemy)
 
 };
@@ -255,6 +374,9 @@ function moveEnemy() {
 const attackBullet = () => {
 
     var aliens = document.querySelectorAll("#enemy .alien-container");
+
+    if(!aliens) return;
+
     var attackers = []
     aliens.forEach((alien) => {
         if (alien.children[0].style.visibility != "hidden") {
@@ -296,7 +418,7 @@ const attackBullet = () => {
 
                 if (!enemy_bullet) return
 
-                let bulletSpeedY = 5;
+                let bulletSpeedY = 2;
                 bulletPositionY += bulletSpeedY
                 enemy_bullet.style.top = `${bulletPositionY}px`
 
@@ -316,7 +438,9 @@ const attackBullet = () => {
                 });
 
                 if (enemy_bulletRect.left < ship.getBoundingClientRect().right && enemy_bulletRect.right > ship.getBoundingClientRect().left && enemy_bulletRect.top < ship.getBoundingClientRect().bottom && enemy_bulletRect.bottom > ship.getBoundingClientRect().top) {
-                    damage += 1
+                    currentHealth -= 150 * level
+                    if (currentHealth < 0) currentHealth = 0
+                    updateHealth()
                     enemy_bullet.remove()
                     return;
                 }
@@ -343,8 +467,4 @@ const attackBullet = () => {
 
 requestAnimationFrame(moveShip);
 
-spawnAlien();
-
-// requestAnimationFrame(moveEnemy)
-
-// attackBullet()
+upLevel()
