@@ -443,7 +443,7 @@ const attackBullet = () => {
                 });
 
                 if (enemy_bulletRect.left < ship.getBoundingClientRect().right && enemy_bulletRect.right > ship.getBoundingClientRect().left && enemy_bulletRect.top < ship.getBoundingClientRect().bottom && enemy_bulletRect.bottom > ship.getBoundingClientRect().top) {
-                    currentHealth -= 150 * level
+                    currentHealth -= 100 * level
                     if (currentHealth < 0) currentHealth = 0
                     updateHealth()
                     enemy_bullet.remove()
