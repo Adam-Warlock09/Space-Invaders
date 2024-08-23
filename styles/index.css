@@ -150,7 +150,15 @@ body {
 .alien-img {
   height: 60px;
   aspect-ratio: 1;
+}
 
+.endline{
+  position: absolute;
+  height: 0.2rem;
+  width: 100vw;
+  background-color: rgba(255, 0, 0, 0.2);
+  z-index: 7;
+  bottom: 7%;
 }
 
 @keyframes moving-stars {
