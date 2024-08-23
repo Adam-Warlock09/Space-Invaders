@@ -427,13 +427,13 @@ function moveEnemy() {
     if (enemyLeftPos + enemyWidth >= game.clientWidth || enemyLeftPos < 0) {
 
         enemyDirection *= -1
-        if (ship.getBoundingClientRect().top - enemy.getBoundingClientRect().bottom <= 60){
+        if (ship.getBoundingClientRect().top - enemy.getBoundingClientRect().bottom <= 40){
             enemy.style.top = `${enemy.offsetTop + (ship.getBoundingClientRect().top - enemy.getBoundingClientRect().bottom)}px`
             currentHealth = 0
             updateHealth()
             return
         }
-        enemy.style.top = `${enemy.offsetTop + 60}px`;
+        enemy.style.top = `${enemy.offsetTop + 40}px`;
         if (enemyLeftPos + enemyWidth >= game.clientWidth) {
             enemy.style.left = `${enemy.offsetLeft + (enemyLeftPos + enemyWidth - game.clientWidth + 5) * (-1)}px`;
             flag = 0
