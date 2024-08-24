@@ -2,7 +2,7 @@ A simple Space Invaders prototype made using JavaScript for the Scribbler JavaSc
 
 Protect yourself from multiple aliens invading your spaceship!
 
-Controls : A,D/Arrow Keys to move, G to shoot.
+Controls : Arrow Keys to move, G to shoot.
 
 Scribbler Link : 
 
