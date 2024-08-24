@@ -12,6 +12,15 @@ const levelCount = document.getElementById("level")
 const levelDisplay = document.getElementById("levelDisplay")
 const highScoreDisplay = document.getElementById("highscore")
 
+//SOUNDS
+
+const shootSound = new Audio('../assets/sounds/shoot.wav');
+const hitSound = new Audio("../assets/sounds/hit.mp3");
+const bulletCollideSound = new Audio("../assets/sounds/buller.wav")
+const dmgSound = new Audio("../assets/sounds/damage.wav")
+const loseSound = new Audio("../assets/sounds/lose.wav")
+const winSound = new Audio("../assets/sounds/win.wav")
+
 var shooting = false
 var shootInterval = null
 var canShoot = true
@@ -127,6 +136,8 @@ const updateHealth = () => {
 
         setTimeout(() => {
 
+            loseSound.volume = 1
+            loseSound.play();
             levelDisplay.style.opacity = "0"
             setTimeout(() => {
                 restartGame()
@@ -183,6 +194,11 @@ const upLevel = () => {
     updateHealth();
 
     updateScore();
+    
+    if (level != 1) {
+        winSound.volume = 1
+        winSound.play();
+    }
 
     setTimeout(() => {
         
@@ -310,6 +326,10 @@ const shootBullet = (direction) => {
     bullet.style.left = `${bulletPositionX}px`
     bullet.style.top = `${bulletPositionY}px`
 
+    var shootSoundClone = shootSound.cloneNode();
+    shootSoundClone.volume = 0.08
+    shootSoundClone.play()
+
     function moveBullet() {
 
         if (!bullet) return
@@ -333,6 +353,9 @@ const shootBullet = (direction) => {
 
             if (alien.children[0].style.visibility != 'hidden' && (bulletRect.left < alienRect.right && bulletRect.right > alienRect.left && bulletRect.top < alienRect.bottom && bulletRect.bottom > alienRect.top)) {
                 alien.children[0].style.visibility = 'hidden'
+                const hitClone = hitSound.cloneNode();
+                hitClone.volume = 0.08
+                hitClone.play();
                 let enemy_level
                 if (alien.children[0].src.includes("alien-1")) {
                     enemy_level = 1
@@ -452,7 +475,7 @@ const attackBullet = () => {
 
     var aliens = document.querySelectorAll("#enemy .alien-container");
 
-    if(!aliens) return;
+    if(aliens.length == 0) return;
 
     var attackers = []
     aliens.forEach((alien) => {
@@ -463,7 +486,7 @@ const attackBullet = () => {
 
     var attacking = []
 
-    for (z = 0; z < level * 3; z++) {
+    for (var z = 0; z < level * 3; z++) {
         let selected = attackers[Math.round(Math.random() * (attackers.length))]
         if (attackers.length > level * 3 * 1.5) {
             while (attacking.includes(selected)) {
@@ -507,6 +530,9 @@ const attackBullet = () => {
                     let player_bulletRect = player_bullet.getBoundingClientRect();
 
                     if (((enemy_bulletRect.left > player_bulletRect.left && enemy_bulletRect.left < player_bulletRect.right) || (enemy_bulletRect.right > player_bulletRect.left && enemy_bulletRect.right < player_bulletRect.right)) && ((enemy_bulletRect.top > player_bulletRect.top && enemy_bulletRect.top < player_bulletRect.bottom) || (enemy_bulletRect.bottom > player_bulletRect.top && enemy_bulletRect.bottom < player_bulletRect.bottom))) {
+                        var hitClone = hitSound.cloneNode();
+                        hitClone.volume = 0.5
+                        hitClone.play();
                         player_bullet.remove()
                         enemy_bullet.remove()
                         return;
@@ -516,6 +542,9 @@ const attackBullet = () => {
 
                 if (enemy_bulletRect.left < ship.getBoundingClientRect().right && enemy_bulletRect.right > ship.getBoundingClientRect().left && enemy_bulletRect.top < ship.getBoundingClientRect().bottom && enemy_bulletRect.bottom > ship.getBoundingClientRect().top) {
                     currentHealth -= 100 * level
+                    var dmClone = dmgSound.cloneNode();
+                    dmClone.volume = 0.5
+                    dmClone.play();
                     if (currentHealth < 0) currentHealth = 0
                     updateHealth()
                     enemy_bullet.remove()
