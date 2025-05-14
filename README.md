@@ -4,7 +4,7 @@ Protect yourself from multiple aliens invading your spaceship!
 
 Controls : Arrow Keys to move, Space to shoot.
 
-Scribbler Link : 
+Game Link : https://adam-warlock09.github.io/Space-Invaders/templates/
 
 Features:
 - Player Movement and Shooting Mechanics
